@@ -450,6 +450,7 @@ class TC_GAME_API Spell
         void EffectSetPlayerDataElementCharacter();
         void EffectSetPlayerDataFlagAccount();
         void EffectSetPlayerDataFlagCharacter();
+        void EffectSetChromieTime();
 
         typedef std::unordered_set<Aura*> UsedSpellMods;
 
