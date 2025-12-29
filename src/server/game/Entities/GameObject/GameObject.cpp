@@ -2842,6 +2842,19 @@ void GameObject::Use(Unit* user, bool ignoreCastInProgress /*= false*/)
                 }
                 else
                     player->KillCreditGO(info->entry, GetGUID());
+                
+                    uint32 spell = info->goober.spell;
+                    SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell, GetMap()->GetDifficultyID());
+
+                    for (SpellEffectInfo const& effect : spellInfo->GetEffects())
+                    {
+                        if (effect.EffectIndex == EFFECT_0)
+                        {
+                            int32 valA = effect.MiscValue;
+                            player->KilledMonsterCredit(valA, GetGUID());
+                        }
+                    }
+                    break;
             }
 
             if (uint32 trapEntry = info->goober.linkedTrap)
