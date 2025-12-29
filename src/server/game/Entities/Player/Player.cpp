@@ -16622,19 +16622,7 @@ void Player::UpdateQuestObjectiveProgress(QuestObjectiveType objectiveType, int3
         if (victimGuid.IsGameObject())
         {
             if (GameObject* gameObject = ObjectAccessor::GetGameObject(*this, victimGuid))
-            {
-                data = sObjectMgr->GetSpawnMetadata(SPAWN_TYPE_GAMEOBJECT, gameObject->GetSpawnId());
-            
-                if (data && data->spawnTrackingQuestObjectiveId != objective->ID)
-                {
-                     // Проверяем, не является ли этот objective частью того же SpawnTrackingId
-                     if (sObjectMgr->IsQuestObjectiveForSpawnTracking(data->spawnTrackingData->SpawnTrackingId, objective->ID))
-                     {
-                         // Подменяем ID для прохождения проверки ниже
-                         const_cast<SpawnMetadata*>(data)->spawnTrackingQuestObjectiveId = objective->ID;
-                     }
-                }
-            }
+                data = sObjectMgr->GetSpawnMetadata(SPAWN_TYPE_GAMEOBJECT, gameObject->GetSpawnId());               
         }
         else if (victimGuid.IsCreatureOrVehicle())
         {
