@@ -533,6 +533,9 @@ m_spellValue(new SpellValue(m_spellInfo, caster)), _spellEvent(nullptr)
     if (IsIgnoringCooldowns())
         m_castFlagsEx |= CAST_FLAG_EX_IGNORE_COOLDOWN;
 
+    if (_triggeredCastFlags & TRIGGERED_SUPPRESS_CASTER_ANIM)
+        m_castFlagsEx |= CAST_FLAG_EX_SUPPRESS_CASTER_ANIM;
+
     unitTarget = nullptr;
     itemTarget = nullptr;
     gameObjTarget = nullptr;
@@ -3624,8 +3627,6 @@ void Spell::cancel()
             SendChannelUpdate(0, SPELL_FAILED_INTERRUPTED);
             SendInterrupted(0);
             SendCastResult(SPELL_FAILED_INTERRUPTED);
-
-            m_appliedMods.clear();
             break;
         default:
             break;
@@ -3894,7 +3895,7 @@ void Spell::_cast(bool skipCheck)
     }
 
     if (m_scriptResult && !m_scriptWaitsForSpellHit)
-        m_scriptResult->SetResult(SPELL_CAST_OK);
+        m_scriptResult.SetResult(SPELL_CAST_OK);
 
     CallScriptAfterCastHandlers();
 
@@ -4383,7 +4384,7 @@ void Spell::finish(SpellCastResult result)
     m_spellState = SPELL_STATE_FINISHED;
 
     if (m_scriptResult && (m_scriptWaitsForSpellHit || result != SPELL_CAST_OK))
-        m_scriptResult->SetResult(result);
+        m_scriptResult.SetResult(result);
 
     if (!m_caster)
         return;
@@ -5090,7 +5091,7 @@ static std::pair<int32, SpellHealPredictionType> CalcPredictedHealing(SpellInfo 
                 case SPELL_AURA_OBS_MOD_HEALTH:
                     points += unitCaster->SpellHealingBonusDone(target,
                         spellInfo, spellEffectInfo.CalcValue(unitCaster, nullptr, target, nullptr, castItemEntry, castItemLevel),
-                        DIRECT_DAMAGE, spellEffectInfo, 1, spell) * spellInfo->GetMaxTicks();
+                        DIRECT_DAMAGE, spellEffectInfo, 1, spell) * spellEffectInfo.GetPeriodicTickCount();
                     break;
                 case SPELL_AURA_PERIODIC_TRIGGER_SPELL:
                     if (SpellInfo const* triggered = sSpellMgr->GetSpellInfo(spellEffectInfo.TriggerSpell, spellInfo->Difficulty))
