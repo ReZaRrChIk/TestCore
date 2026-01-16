@@ -1,1 +1,1 @@
-UPDATE `creature_template` SET `ScriptName`= 'npc_aysa_cloudsinger_summon' WHERE `entry`=59652; 
+UPDATE `creature_template` SET `AIName`= 'SmartAI' WHERE `entry`=54567; 
